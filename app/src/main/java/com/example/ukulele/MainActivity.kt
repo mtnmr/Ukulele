@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback{
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         val canvas = binding.surfaceView.holder.lockCanvas()
         canvas.drawColor(Color.rgb(115,66,41))
+
         val widthFret:Float = (height / 4).toFloat()
         val paint = Paint()
         paint.color = Color.rgb(42,42,42)
@@ -37,7 +38,20 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback{
             canvas.drawLine(0f, widthFret*i, width.toFloat(), widthFret*i, paint)
             frets[i-1] = widthFret*i
         }
+        paint.color = Color.BLACK
+        canvas.drawRect(0f, 0f, width.toFloat(), widthFret*1, paint)
 
+        val margin = 200f
+        val stringInterval :Float = ((width-(margin*2)) / 3).toFloat()
+        paint.color = Color.GRAY
+        paint.strokeWidth = 20f
+        for (i in 1..3){
+            canvas.drawLine(margin+stringInterval*i,0f,
+                margin+stringInterval*i, height.toFloat(),paint )
+            strings[i] = margin + stringInterval * i
+        }
+
+        binding.surfaceView.holder.unlockCanvasAndPost(canvas)
     }
 
     override fun surfaceDestroyed(p0: SurfaceHolder) {
