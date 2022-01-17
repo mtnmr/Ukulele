@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback{
         val stringInterval :Float = ((width-(margin*2)) / 3).toFloat()
         paint.color = Color.GRAY
         paint.strokeWidth = 20f
-        for (i in 1..3){
+        for (i in 0..3){
             canvas.drawLine(margin+stringInterval*i,0f,
                 margin+stringInterval*i, height.toFloat(),paint )
             strings[i] = margin + stringInterval * i
@@ -117,9 +117,9 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback{
                 in (strings[3]-200)..(strings[3]+200) -> stringNo = 1
             }
             when (event.y - diffY){
-                in (frets[0]+15f)..(frets[0]-15f) ->fretNo = 1
-                in (frets[1]+15f)..(frets[1]-15f) ->fretNo = 2
-                in (frets[2]+15f)..(frets[2]-15f) ->fretNo = 3
+                in (frets[0]+15f)..(frets[1]-15f) ->fretNo = 1
+                in (frets[1]+15f)..(frets[2]-15f) ->fretNo = 2
+                in (frets[2]+15f)..(frets[3]-15f) ->fretNo = 3
             }
 
             playTone(stringNo, fretNo)
