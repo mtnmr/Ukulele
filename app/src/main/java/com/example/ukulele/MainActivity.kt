@@ -2,9 +2,11 @@ package com.example.ukulele
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Insets
 import android.graphics.Paint
 import android.graphics.Point
 import android.media.MediaPlayer
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -13,6 +15,11 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.WindowManager
 import com.example.ukulele.databinding.ActivityMainBinding
+import android.view.WindowInsets
+
+import android.view.WindowMetrics
+import androidx.annotation.RequiresApi
+
 
 class MainActivity : AppCompatActivity(), SurfaceHolder.Callback{
     private lateinit var binding: ActivityMainBinding
@@ -37,6 +44,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback{
     private var b5:MediaPlayer = MediaPlayer()
     private var c6:MediaPlayer = MediaPlayer()
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -45,11 +53,21 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback{
         val holder = binding.surfaceView.holder
         holder.addCallback(this)
 
-        val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display: Display = windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        screenHeight = size.y
+//        val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+//        val display: Display = windowManager.defaultDisplay
+//        val size = Point()
+//        display.getSize(size)
+//        screenHeight = size.y
+
+        val windowMetrics = windowManager.getCurrentWindowMetrics()
+        val insets: Insets = windowMetrics.windowInsets
+            .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+//        val ScreenWidth = windowMetrics.bounds.width()
+        val ScreenHeight = windowMetrics.bounds.height()
+//        screenHeight = windowMetrics.bounds.height()
+//        val StatusBar: Int = insets.top
+        val NavigationBar: Int = insets.bottom
+        screenHeight = ScreenHeight - NavigationBar
 
         c5 = MediaPlayer.create(this, R.raw.guitar_c5)
         cs5 = MediaPlayer.create(this, R.raw.guitar_cs5)
@@ -117,9 +135,10 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback{
                 in (strings[3]-200)..(strings[3]+200) -> stringNo = 1
             }
             when (event.y - diffY){
-                in (frets[0]+15f)..(frets[1]-15f) ->fretNo = 1
-                in (frets[1]+15f)..(frets[2]-15f) ->fretNo = 2
-                in (frets[2]+15f)..(frets[3]-15f) ->fretNo = 3
+                in 15f..(frets[0] - 15f) ->fretNo = 0
+                in (frets[0]-14f)..(frets[1]-15f) ->fretNo = 1
+                in (frets[1]-14f)..(frets[2]-15f) ->fretNo = 2
+                in (frets[2]-14f)..(frets[3]-15f) ->fretNo = 3
             }
 
             playTone(stringNo, fretNo)
